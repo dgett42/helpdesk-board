@@ -190,5 +190,16 @@ function getRandomUpdate(ticket) {
     Critical: ['High', 'Critical'],
   };
 
-  
+ const changeStatus = Math.random() < 0.5;
+
+  if (changeStatus) {
+    const options = statusTransitions[ticket.status] || [ticket.status];
+    const nextStatus = options[Math.floor(Math.random() * options.length)];
+    return { status: nextStatus };
+  } else {
+    const options = priorityTransitions[ticket.priority] || [ticket.priority];
+    const nextPriority = options[Math.floor(Math.random() * options.length)];
+    return { priority: nextPriority };
+  }
+}
 
