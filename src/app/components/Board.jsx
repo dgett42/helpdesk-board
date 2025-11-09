@@ -51,3 +51,84 @@ export default function Board() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (!tickets.length) return;
+
+    const intervalMs = 8000; 
+
+    const intervalId = setInterval(() => {
+      setTickets((prev) => {
+        if (!prev.length) return prev;
+
+        const index = Math.floor(Math.random() * prev.length);
+        const ticket = prev[index];
+
+        if (!ticket) return prev;
+
+        const updatedTicket = {
+          ...ticket,
+          ...getRandomUpdate(ticket),
+          updatedAt: new Date().toISOString(),
+        };
+
+        const next = [...prev];
+        next[index] = updatedTicket;
+        return next;
+      });
+    }, intervalMs);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [tickets.length]);
+
+  const handleStatusChange = (status) => {
+    setFilters((prev) => ({ ...prev, status }));
+  };
+
+  const handlePriorityChange = (priority) => {
+    setFilters((prev) => ({ ...prev, priority }));
+  };
+
+  const handleAddToQueue = (ticketId) => {
+    setQueue((prev) => {
+      if (prev[ticketId]) return prev;
+      return { ...prev, [ticketId]: true };
+    });
+  };
+
+  const handleRemoveFromQueue = (ticketId) => {
+    setQueue((prev) => {
+      if (!prev[ticketId]) return prev;
+      const next = { ...prev };
+      delete next[ticketId];
+      return next;
+    });
+  };
+
+  const handleClearQueue = () => {
+    setQueue({});
+  };
+
+  
+  const searchLower = search.toLowerCase();
+
+  const visibleTickets = tickets.filter((ticket) => {
+    if (filters.status !== 'All' && ticket.status !== filters.status) {
+      return false;
+    }
+    if (filters.priority !== 'All' && ticket.priority !== filters.priority) {
+      return false;
+    }
+    if (searchLower) {
+      const inTitle = ticket.title.toLowerCase().includes(searchLower);
+      const inDescription = ticket.description
+        .toLowerCase()
+        .includes(searchLower);
+      if (!inTitle && !inDescription) return false;
+    }
+    return true;
+  }); 
+
+  
