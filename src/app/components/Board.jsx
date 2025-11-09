@@ -131,4 +131,47 @@ export default function Board() {
     return true;
   }); 
 
-  
+   const isEmpty = !loading && !error && visibleTickets.length === 0;
+
+  return (
+    <section className="space-y-4">
+
+      <div className="flex flex-col gap-3 md:flex-row md:items-end">
+        <div className="flex-1 flex gap-3">
+          <StatusFilter
+            value={filters.status}
+            onChange={handleStatusChange}
+          />
+          <PriorityFilter
+            value={filters.priority}
+            onChange={handlePriorityChange}
+          />
+        </div>
+        <div className="w-full md:w-72">
+          <SearchBox value={search} onChange={setSearch} />
+        </div>
+      </div>
+
+      <StatusMessage loading={loading} error={error} isEmpty={isEmpty} />
+
+      <div className="grid gap-4 lg:grid-cols-[2fr,1fr]">
+        <div>
+          <TicketList
+            tickets={visibleTickets}
+            queue={queue}
+            onAddToQueue={handleAddToQueue}
+          />
+        </div>
+        <div>
+          <MyQueueSummary
+            tickets={tickets}
+            queue={queue}
+            onRemove={handleRemoveFromQueue}
+            onClear={handleClearQueue}
+          />
+        </div>
+      </div>
+    </section>
+  );
+} 
+
