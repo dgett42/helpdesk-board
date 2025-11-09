@@ -175,3 +175,20 @@ export default function Board() {
   );
 } 
 
+function getRandomUpdate(ticket) {
+  const statusTransitions = {
+    Open: ['In Progress', 'On Hold'],
+    'In Progress': ['Resolved', 'On Hold'],
+    'On Hold': ['In Progress'],
+    Resolved: ['Resolved'],
+  };
+
+  const priorityTransitions = {
+    Low: ['Low', 'Medium'],
+    Medium: ['Low', 'Medium', 'High'],
+    High: ['Medium', 'High', 'Critical'],
+    Critical: ['High', 'Critical'],
+  };
+
+  
+
