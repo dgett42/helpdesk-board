@@ -134,46 +134,47 @@ export default function Board() {
    const isEmpty = !loading && !error && visibleTickets.length === 0;
 
   return (
-    <section className="space-y-4">
-
+    <section className="space-y-6">
+      {/* Filters row */}
       <div className="flex flex-col gap-3 md:flex-row md:items-end">
-        <div className="flex-1 flex gap-3">
-          <StatusFilter
-            value={filters.status}
-            onChange={handleStatusChange}
-          />
-          <PriorityFilter
-            value={filters.priority}
-            onChange={handlePriorityChange}
-          />
+        <div className="flex gap-3 md:flex-none">
+          <div className="w-40">
+            <StatusFilter value={filters.status} onChange={handleStatusChange} />
+          </div>
+          <div className="w-40">
+            <PriorityFilter value={filters.priority} onChange={handlePriorityChange} />
+          </div>
         </div>
-        <div className="w-full md:w-72">
+        <div className="flex-1 md:max-w-sm lg:max-w-md">
           <SearchBox value={search} onChange={setSearch} />
         </div>
       </div>
 
+      {/* Global status (loading, error, empty) */}
       <StatusMessage loading={loading} error={error} isEmpty={isEmpty} />
 
-      <div className="grid gap-4 lg:grid-cols-[2fr,1fr]">
-        <div>
-          <TicketList
-            tickets={visibleTickets}
-            queue={queue}
-            onAddToQueue={handleAddToQueue}
-          />
-        </div>
-        <div>
-          <MyQueueSummary
-            tickets={tickets}
-            queue={queue}
-            onRemove={handleRemoveFromQueue}
-            onClear={handleClearQueue}
-          />
-        </div>
+      {/* Tickets grid */}
+      <div className="space-y-3">
+        <h2 className="text-sm font-semibold text-slate-100">Tickets</h2>
+        <TicketList
+          tickets={visibleTickets}
+          queue={queue}
+          onAddToQueue={handleAddToQueue}
+        />
+      </div>
+
+      {/* My Queue full width at the bottom */}
+      <div className="pt-2">
+        <MyQueueSummary
+          tickets={tickets}
+          queue={queue}
+          onRemove={handleRemoveFromQueue}
+          onClear={handleClearQueue}
+        />
       </div>
     </section>
   );
-} 
+}
 
 function getRandomUpdate(ticket) {
   const statusTransitions = {
